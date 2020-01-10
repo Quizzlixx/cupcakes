@@ -46,40 +46,18 @@ error_reporting(E_ALL);
         <fieldset class="form-group"> <!-- flavors -->
             <legend for="flavors">Cupcake Flavors</legend>
 
-            <div class="form-check"> <!-- grasshopper -->
-                <input class="form-check-input" type="checkbox" value="grasshopper" id="grasshopper" name="flavors[]">
-                <label for="grasshopper" class="form-check-label">The Grasshopper</label>
-            </div><!-- /grasshopper -->
+                <?php
+                // flavor associative array
+                $cupcakes = array("grasshopper"=>"The Grasshopper", "maple"=>"Whiskey Maple Bacon", "carrot"=>"Carrot Walnut",
+                    "caramel"=>"Salted Caramel Cupcake", "velvet"=>"Red Velvet", "lemon"=>"Lemon Drop", "tiramisu"=>"Tiramisu");
 
-            <div class="form-check"> <!-- whiskeyMapleBacon -->
-                <input class="form-check-input" type="checkbox" value="whiskeyMapleBacon" id="whiskeyMapleBacon" name="flavors[]">
-                <label for="whiskeyMapleBacon" class="form-check-label">Whiskey Maple Bacon</label>
-            </div><!-- /whiskeyMapleBacon -->
-
-            <div class="form-check"> <!-- carrotWalnut -->
-                <input class="form-check-input" type="checkbox" value="carrotWalnut" id="carrotWalnut" name="flavors[]">
-                <label for="carrotWalnut" class="form-check-label">Carrot Walnut</label>
-            </div><!-- /carrotWalnut -->
-
-            <div class="form-check"> <!-- saltedCaramelCupcake -->
-                <input class="form-check-input" type="checkbox" value="saltedCaramelCupcake" id="saltedCaramelCupcake" name="flavors[]">
-                <label for="saltedCaramelCupcake" class="form-check-label">Salted Caramel Cupcake</label>
-            </div><!-- /saltedCaramelCupcake -->
-
-            <div class="form-check"> <!-- redVelvet -->
-                <input class="form-check-input" type="checkbox" value="redVelvet" id="redVelvet" name="flavors[]">
-                <label for="redVelvet" class="form-check-label">Red Velvet</label>
-            </div><!-- /redVelvet -->
-
-            <div class="form-check"> <!-- lemonDrop -->
-                <input class="form-check-input" type="checkbox" value="lemonDrop" id="lemonDrop" name="flavors[]">
-                <label for="lemonDrop" class="form-check-label">Lemon Drop</label>
-            </div><!-- /lemonDrop -->
-
-            <div class="form-check"> <!-- tiramisu -->
-                <input class="form-check-input" type="checkbox" value="tiramisu" id="tiramisu" name="flavors[]">
-                <label for="tiramisu" class="form-check-label">Tiramisu</label>
-            </div><!-- /tiramisu -->
+                foreach ($cupcakes as $name => $flavor) {
+                    echo "<div class=\"form-check\">";
+                    echo "<input type='checkbox' class='form-check-input' value='$name' name='$name' id='$name'>";
+                    echo "<label for='$name' class='form-check-label'>$flavor</label>";
+                    echo "</div>";
+                }
+                ?>
 
         </fieldset> <!-- /flavors -->
 

@@ -82,6 +82,8 @@ error_reporting(E_ALL);
             </div><!-- /tiramisu -->
 
         </fieldset> <!-- /flavors -->
+
+        <button type="submit" class="btn btn-primary" id="submit">Order</button>
     </form> <!-- /form -->
 </div>
 <!-- jQuery -->

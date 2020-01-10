@@ -17,7 +17,7 @@ error_reporting(E_ALL);
     <!-- bootstrap -->
     <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <!-- stylesheet -->
-    <link rel="stylesheet" href="style/styles.css">
+    <link rel="stylesheet" href="styles/cupcakes.css">
 </head>
 <body>
 <!-- header -->

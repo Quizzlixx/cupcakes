@@ -5,6 +5,8 @@
  * Full Stack Web Development
  * PHP Review Assignment: Cupcakes
  * http://www.klow.greenriverdev.com/328/cupcakes/index.php
+ * This program will display a form for the user to order cupcakes. Upon valid submission, the form will
+ * be hidden and the order summary will be displayed.
  */
 
 // turn on error reporting
@@ -37,8 +39,11 @@ error_reporting(E_ALL);
         "caramel" => "Salted Caramel Cupcake", "velvet" => "Red Velvet", "lemon" => "Lemon Drop", "tiramisu" => "Tiramisu");
 
     // variables
+    $displayForm = true;
     $name = $nameErr = $cupcakeErr = $checked = $orderSummary = $cupcakeArray = $value = "";
     $isValid = true;
+    $price = 3.50;
+    $total = 0;
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -51,14 +56,16 @@ error_reporting(E_ALL);
         }
 
         // validate array
-        if(empty($_POST['cupcakes'])) {
+        if (empty($_POST['cupcakes'])) {
             $cupcakeErr = "You must select at least one cupcake.";
             $isValid = false;
         } else {
             $cupcakeArray = $_POST['cupcakes'];
+            $orderArray = [];
             foreach ($cupcakeArray as $value) {
                 if (array_key_exists($value, $cupcakes)) {
-                    echo $cupcakes[$value];
+                    $orderArray[$value] = $cupcakes[$value];
+                    $total += $price;
                 } else {
                     $cupcakeErr = "Invalid cupcake flavor.";
                 }
@@ -66,56 +73,73 @@ error_reporting(E_ALL);
         }
     }
 
+    if (isset($_POST['submit']) && $isValid) {
+        echo "<h1>Thank you for your order, $name!</h1>";
+        echo "<p>Order summary:</p>";
+        echo "<ul>";
+        foreach ($orderArray as $item) {
+            echo "<li>$item</li>";
+        }
+        echo "</ul>";
+        echo "Your total is: $$total";
+    }
+
     // from w3 schools
-    function test_input($data) {
+    function test_input($data)
+    {
         $data = trim($data);
         $data = stripslashes($data);
         $data = htmlspecialchars($data);
         return $data;
     }
+
     ?>
+    <?php
+    if (isset($_POST['submit']) && $isValid) {
+        $displayForm = false;
+    }
+    if ($displayForm) {
+        ?>
+        <form id="cupcake-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+            <!-- Form -->
 
-    <form id="cupcake-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST"> <!-- Form -->
+            <fieldset class="form-group"> <!-- order information -->
+                <legend>Order Information</legend>
 
-        <fieldset class="form-group"> <!-- order information -->
-            <legend>Order Information</legend>
-
-            <div class="form-group"> <!-- name -->
-                <label for="yourName">Your Name</label>
-                <input type="text" class="form-control" name="name" id="name" value="<?php echo $name; ?>">
-                <span class="lead text-danger">
+                <div class="form-group"> <!-- name -->
+                    <label for="yourName">Your Name</label>
+                    <input type="text" class="form-control" name="name" id="name" value="<?php echo $name; ?>">
+                    <span class="lead text-danger">
                     <?php
                     echo $nameErr;
                     ?>
                 </span>
-            </div><!-- /name -->
-        </fieldset><!-- /order information -->
+                </div><!-- /name -->
+            </fieldset><!-- /order information -->
 
-        <fieldset class="form-group"> <!-- flavors -->
-            <legend>Cupcake Flavors</legend>
-            <?php
-            foreach ($cupcakes as $name => $flavor) {
-                echo "<div class='form-check'>";
-                if (!empty($_POST['cupcakes']) && array_key_exists($value, $cupcakes)) {
-                    echo "<input type='checkbox' class='form-check-input' value='$name' id='$name' name='cupcakes[]' checked>";
-                } else {
+            <fieldset class="form-group"> <!-- flavors -->
+                <legend>Cupcake Flavors</legend>
+                <?php
+                foreach ($cupcakes as $name => $flavor) {
+                    echo "<div class='form-check'>";
                     echo "<input type='checkbox' class='form-check-input' value='$name' id='$name' name='cupcakes[]'>";
+                    echo "<label class='form-check-label' for='$name'>$flavor</label>";
+                    echo "</div>";
                 }
-                echo "<label class='form-check-label' for='$name'>$flavor</label>";
-                echo "</div>";
-            }
-            ?>
-            <span class="lead text-danger">
+                ?>
+                <span class="lead text-danger">
                 <?php
                 echo $cupcakeErr;
                 ?>
             </span>
 
-        </fieldset> <!-- /flavors -->
+            </fieldset> <!-- /flavors -->
 
-        <button type="submit" class="btn btn-primary" id="submit">Order</button>
-    </form> <!-- /form -->
-
+            <button type="submit" class="btn btn-primary" name="submit" id="submit">Order</button>
+        </form> <!-- /form -->
+        <?php
+    }
+    ?>
 
 </div>
 <!-- jQuery -->

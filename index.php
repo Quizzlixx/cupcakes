@@ -1,14 +1,16 @@
 <?php
 /**
  * Kerrie Low
- *
- *
+ * 1.10.20
+ * Full Stack Web Development
+ * PHP Review Assignment: Cupcakes
+ * http://www.klow.greenriverdev.com/328/cupcakes/index.php
  */
+
 // turn on error reporting
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,7 +19,7 @@ error_reporting(E_ALL);
     <!-- bootstrap -->
     <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <!-- stylesheet -->
-    <link rel="stylesheet" href="styles/cupcakes.css">
+    <link rel="stylesheet" type="text/css" href="styles/cupcakes.css">
 </head>
 <body>
 <!-- header -->
@@ -29,40 +31,92 @@ error_reporting(E_ALL);
     </div>
 </div> <!-- /header -->
 <div class="container">
-    <form id="cupcakeForm" action="confirmation.php" method="POST"> <!-- Form -->
+    <?php
+    // flavor associative array
+    $cupcakes = array("grasshopper" => "The Grasshopper", "maple" => "Whiskey Maple Bacon", "carrot" => "Carrot Walnut",
+        "caramel" => "Salted Caramel Cupcake", "velvet" => "Red Velvet", "lemon" => "Lemon Drop", "tiramisu" => "Tiramisu");
+
+    // variables
+    $name = $nameErr = $cupcakeErr = $checked = $orderSummary = $cupcakeArray = $value = "";
+    $isValid = true;
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+        // validate name
+        if (empty($_POST['name'])) {
+            $nameErr = "Name is required.";
+            $isValid = false;
+        } else {
+            $name = test_input($_POST['name']);
+        }
+
+        // validate array
+        if(empty($_POST['cupcakes'])) {
+            $cupcakeErr = "You must select at least one cupcake.";
+            $isValid = false;
+        } else {
+            $cupcakeArray = $_POST['cupcakes'];
+            foreach ($cupcakeArray as $value) {
+                if (array_key_exists($value, $cupcakes)) {
+                    echo $cupcakes[$value];
+                } else {
+                    $cupcakeErr = "Invalid cupcake flavor.";
+                }
+            }
+        }
+    }
+
+    // from w3 schools
+    function test_input($data) {
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        return $data;
+    }
+    ?>
+
+    <form id="cupcake-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST"> <!-- Form -->
 
         <fieldset class="form-group"> <!-- order information -->
             <legend>Order Information</legend>
 
             <div class="form-group"> <!-- name -->
                 <label for="yourName">Your Name</label>
-                <input type="text" class="form-control" name="yourName" id="yourName">
-                <span class="err" id="err-yourName">
-                    Please enter your name
+                <input type="text" class="form-control" name="name" id="name" value="<?php echo $name; ?>">
+                <span class="lead text-danger">
+                    <?php
+                    echo $nameErr;
+                    ?>
                 </span>
             </div><!-- /name -->
         </fieldset><!-- /order information -->
 
         <fieldset class="form-group"> <!-- flavors -->
-            <legend for="flavors">Cupcake Flavors</legend>
-
-                <?php
-                // flavor associative array
-                $cupcakes = array("grasshopper"=>"The Grasshopper", "maple"=>"Whiskey Maple Bacon", "carrot"=>"Carrot Walnut",
-                    "caramel"=>"Salted Caramel Cupcake", "velvet"=>"Red Velvet", "lemon"=>"Lemon Drop", "tiramisu"=>"Tiramisu");
-
-                foreach ($cupcakes as $name => $flavor) {
-                    echo "<div class=\"form-check\">";
-                    echo "<input type='checkbox' class='form-check-input' value='$name' name='$name' id='$name'>";
-                    echo "<label for='$name' class='form-check-label'>$flavor</label>";
-                    echo "</div>";
+            <legend>Cupcake Flavors</legend>
+            <?php
+            foreach ($cupcakes as $name => $flavor) {
+                echo "<div class='form-check'>";
+                if (!empty($_POST['cupcakes']) && array_key_exists($value, $cupcakes)) {
+                    echo "<input type='checkbox' class='form-check-input' value='$name' id='$name' name='cupcakes[]' checked>";
+                } else {
+                    echo "<input type='checkbox' class='form-check-input' value='$name' id='$name' name='cupcakes[]'>";
                 }
+                echo "<label class='form-check-label' for='$name'>$flavor</label>";
+                echo "</div>";
+            }
+            ?>
+            <span class="lead text-danger">
+                <?php
+                echo $cupcakeErr;
                 ?>
+            </span>
 
         </fieldset> <!-- /flavors -->
 
         <button type="submit" class="btn btn-primary" id="submit">Order</button>
     </form> <!-- /form -->
+
+
 </div>
 <!-- jQuery -->
 <!-- slim jQuery does not support AJAX -->
@@ -71,5 +125,7 @@ error_reporting(E_ALL);
         crossorigin="anonymous"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<!-- my JS -->
+<script src="scripts/cupcakes.js"></script>
 </body>
 </html>

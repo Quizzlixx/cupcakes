@@ -100,6 +100,7 @@ error_reporting(E_ALL);
     }
     if ($displayForm) {
         ?>
+        <p>This shouldn't be here!</p>
         <form id="cupcake-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
             <!-- Form -->
 
